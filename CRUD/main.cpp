@@ -18,48 +18,7 @@ int getDataSize(std::fstream &data);
 Book readData(std::fstream &data, int position);
 void displayBook(std::fstream &data);
 void updateData(std::fstream &data);
-
-void deleteData(std::fstream &data){
-    int id, size, offset;
-    Book BlankBook, tempData;
-    std::fstream temp;
-    size = getDataSize(data);
-
-    if(size == 0){
-        std::cout << "Database is empty, No data to delete, Please add data first -_-" << std::endl;
-        return;
-    }
-
-    std::cout << "Choose the data will be deleted: ";
-    std::cin >> id;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    while (id < 1 || id > size) {
-        std::cout << "Invalid position to delete. Please enter a valid position: ";
-        std::cin >> id;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
-
-    writeData(data, id, BlankBook);
-
-    temp.open("temp.dat", std::ios::trunc | std::ios::out | std::ios::binary);
-
-    offset = 0;
-    for(int i = 1; i <= size; i++) {
-        tempData = readData(data, i);
-        if(tempData.title[0] != '\0') {
-            writeData(temp, i - offset, tempData);
-        } else {
-            offset++;
-            std::cout << "Deleted address" << std::endl;
-        }
-    }
-
-    temp.close();
-    data.close();
-    remove("database.bin");
-    rename("temp.dat", "database.bin");
-    data.open("database.bin", std::ios::in | std::ios::out | std::ios::binary);
-}
+void deleteData(std::fstream &data);
 
 int main() {
     std::fstream data;
@@ -264,4 +223,46 @@ void updateData(std::fstream &data) {
     writeData(data, id, updateBook);
     std::cout << "Your option has been updated ^_^" << std::endl;
     
+}
+
+void deleteData(std::fstream &data){
+    int id, size, offset;
+    Book BlankBook, tempData;
+    std::fstream temp;
+    size = getDataSize(data);
+
+    if(size == 0){
+        std::cout << "Database is empty, No data to delete, Please add data first -_-" << std::endl;
+        return;
+    }
+
+    std::cout << "Choose the data will be deleted: ";
+    std::cin >> id;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while (id < 1 || id > size) {
+        std::cout << "Invalid position to delete. Please enter a valid position: ";
+        std::cin >> id;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    writeData(data, id, BlankBook);
+
+    temp.open("temp.dat", std::ios::trunc | std::ios::out | std::ios::binary);
+
+    offset = 0;
+    for(int i = 1; i <= size; i++) {
+        tempData = readData(data, i);
+        if(tempData.title[0] != '\0') {
+            writeData(temp, i - offset, tempData);
+        } else {
+            offset++;
+            std::cout << "Deleted address" << std::endl;
+        }
+    }
+
+    temp.close();
+    data.close();
+    remove("database.bin");
+    rename("temp.dat", "database.bin");
+    data.open("database.bin", std::ios::in | std::ios::out | std::ios::binary);
 }
