@@ -27,7 +27,6 @@ This project implements a simple Address Book in C++, providing functionalities 
 ## Help
 
 If you encounter any issues or have questions, please refer to the documentation or contact the authors.
-@danwildann
 
 ## Authors
 
